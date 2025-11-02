@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sequence Frequency and Location</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        button {
+            color: white;
+            background-color: rgb(128, 157, 245);
+            padding: 10px 20px;
+            border: 2px solid black;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(88, 127, 243);
+        }
+
+        textarea, input {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: max-content;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Sequence Frequency and Location</h1>
+    <p>This program records the frequency and location of each subsequence of specified length.</p>
+
+    <label for="sequence">Provide sequence:</label><br>
+    <textarea id="sequence" rows="10" cols="100" placeholder="Enter your nucleotide sequence here..."></textarea>
+    <br><br>
+
+    <label for="length">Enter subsequence length to be analysed:</label>
+    <input type="number" id="length" value="3" min="1">
+    <br><br>
+
+    <button id="runBtn">Run Program</button>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById("runBtn").addEventListener("click", SeqFreq);
+
+        function SeqFreq() {
+            // 1. Read inputs
+            const sequence = document.getElementById("sequence").value.toUpperCase().replace(/\s/g, "");
+            const length = parseInt(document.getElementById("length").value);
+
+            // 2. Validate inputs
+            if (!sequence.match(/^[ATCG]+$/)) {
+                alert("Please enter a valid nucleotide sequence (only A, T, C, G).");
+                return;
+            }
+
+            if (isNaN(length) || length < 1) {
+                alert("Please enter a valid subsequence length greater than 0.");
+                return;
+            }
+
+            if (length > sequence.length) {
+                alert("Subsequence length cannot be longer than sequence length.");
+                return;
+            }
+
+            // compute subsequence frequencies and positions
+            const subseqData = {};
+            for (let i = 0; i <= sequence.length - length; i++) {
+                const subseq = sequence.substring(i, i + length);
+                if (subseqData[subseq]) {
+                    subseqData[subseq].freq += 1;
+                    subseqData[subseq].positions.push(i);
+                } else {
+                    subseqData[subseq] = { freq: 1, positions: [i] };
+                }
+            }
+
+            // construct results table
+            let output = "<table><tr><th>Subsequence</th><th>Frequency</th><th>Positions</th></tr>";
+            for (const key in subseqData) {
+                const freq = subseqData[key].freq;
+                const pos = subseqData[key].positions.join(", ");
+                output += `<tr><td>${key}</td><td>${freq}</td><td>${pos}</td></tr>`;
+            }
+            output += "</table>";
+
+            // insert table into page
+            document.getElementById("results").innerHTML = output;
+        }
+    </script>
+</body>
+</html>

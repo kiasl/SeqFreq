@@ -78,11 +78,11 @@
         document.getElementById("runBtn").addEventListener("click", SeqFreq);
 
         function SeqFreq() {
-            // 1. Read inputs
+            // read inputs
             const sequence = document.getElementById("sequence").value.toUpperCase().replace(/\s/g, "");
             const length = parseInt(document.getElementById("length").value);
 
-            // 2. Validate inputs
+            // validate inputs
             if (!sequence.match(/^[ATCG]+$/)) {
                 alert("Please enter a valid nucleotide sequence (only A, T, C, G).");
                 return;
